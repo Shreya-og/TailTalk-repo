@@ -1,0 +1,88 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+body {
+  background-color: #ffdac1 !important;
+  color: #505050; /* Graphite Gray */
+  font-family: "Poppins", sans-serif;
+}
+.navbar {
+  background-color: #c1f0f6; /* Mint Sky */
+}
+.card{
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+.post-card {
+  /* background-color: #ffdac1;  Peach Sherbet  */
+  background-color: #fdfd96; /* Lemon Chiffon */
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+.card-title{
+  color: #505050;
+}
+.btn-custom {
+  background-color: #ffb6b9; /* Rose Pink */
+  border: none;
+  color: white;
+}
+.footer {
+  background-color: #c1f0f6; /* Mint Sky */
+  text-align: center;
+  padding: 10px;
+  margin-top: 50px;
+}
+
+.about-card {
+  background-color: #C1F0DC;
+  border-radius: 10px;
+}
+
+.username {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 30px 0 20px;
+}
+
+.post-img {
+  max-height: 600px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.post-form{
+  background-color: #C1F0DC;
+}
+
+.post-btn{
+  background-color: #E4B7A0;
+  color: #fff;
+}
+
+.post-btn:hover{
+  background-color: #E4B7A0;
+}
+
+.btn{
+  border: none;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.btn:hover {
+  background: #ff999c;
+  color: black;
+}
+.like-btn {
+  background: #ffb6b9;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  width: 8rem;
+}
