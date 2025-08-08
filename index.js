@@ -57,12 +57,23 @@ const db = new pg.Client({
 });
 db.connect();
 
-let posts = [];
-let postID= 1;
-
-app.get("/", (req, res) => {
-  res.render("home.ejs");
+app.get('/', async (req, res) => {
+  try {
+    const result = await db.query(`
+  SELECT 
+    posts.*, 
+    COUNT(likes.id) AS like_count
+  FROM posts
+  LEFT JOIN likes ON posts.id = likes.post_id
+  GROUP BY posts.id
+  ORDER BY posts.created_at DESC;`);
+    res.render('home.ejs', { posts: result.rows });
+  } catch (err) {
+    console.error(err);
+    res.render('home.ejs', { posts: [] });
+  }
 });
+
 
 app.get("/login", (req, res) => {
   res.render("login.ejs");
@@ -99,9 +110,14 @@ app.get("/user", async (req, res) => {
     );
     const likedPostIds = likedPosts.rows.map(row => row.post_id);
 
+    const result = await db.query("SELECT about FROM users WHERE id = $1", [req.user.id]);
+    const username= req.user.username;
+    const aboutMe= result.rows[0].about?.trim() || `Hi I am ${username}— an animal lover through and through.`;
+
     res.render("user.ejs", {
       posts: posts.rows,
-      username: req.user.username,
+      username: username,
+      aboutMe: aboutMe,
       likedPostIds
     });
   } else {
@@ -186,6 +202,25 @@ passport.use(
     }
   })
 );
+
+//UPDATE ABOUT SECTION
+app.post('/update-about', async (req, res) => {
+    const { about } = req.body;
+    const userId = req.user.id;
+
+    try {
+        await db.query(
+            'UPDATE users SET about = $1 WHERE id = $2',
+            [about, userId]
+        );
+
+        res.redirect('/user');
+    } catch (err) {
+        console.error('Error updating about section:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.post("/add-post", upload.single("image"), async (req, res) => {
   const { title, content } = req.body;

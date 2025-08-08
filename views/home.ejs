@@ -10,30 +10,37 @@
     html {
       box-sizing: border-box;
     }
+
     *,
     *:before,
     *:after {
       box-sizing: inherit;
     }
+
     body {
       background-color: #ffdac1 !important;
       color: #505050;
       font-family: "Poppins", sans-serif;
     }
+
     .navbar {
       background-color: #c1f0f6;
     }
+
     .card {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     }
+
     .post-card {
       background-color: #fdfd96;
       margin-bottom: 20px;
       border-radius: 10px;
     }
+
     .card-title {
       color: #505050;
     }
+
     .btn-custom {
       background-color: #ffb6b9;
       border: none;
@@ -44,17 +51,20 @@
       text-decoration: none;
       transition: all 0.3s ease;
     }
+
     .btn-custom:hover {
       background-color: #ff999c;
       color: white;
       transform: translateY(-2px);
     }
+
     .footer {
       background-color: #c1f0f6;
       text-align: center;
       padding: 20px;
       margin-top: 50px;
     }
+
     .hero-section {
       background: linear-gradient(135deg, #c1f0f6 0%, #ffdac1 100%);
       padding: 80px 0;
@@ -62,18 +72,21 @@
       border-radius: 0 0 50px 50px;
       margin-bottom: 50px;
     }
+
     .hero-title {
       font-size: 3.5rem;
       font-weight: bold;
       color: #505050;
       margin-bottom: 20px;
     }
+
     .hero-subtitle {
       font-size: 1.3rem;
       color: #505050;
       margin-bottom: 30px;
       opacity: 0.8;
     }
+
     .feature-card {
       background-color: #C1F0DC;
       border-radius: 15px;
@@ -81,26 +94,31 @@
       text-align: center;
       transition: transform 0.3s ease;
     }
+
     .feature-card:hover {
       transform: translateY(-5px);
     }
+
     .feature-icon {
       font-size: 3rem;
       margin-bottom: 20px;
     }
+
     .sample-post {
       background-color: #fdfd96;
       border-radius: 10px;
       padding: 20px;
       margin-bottom: 20px;
     }
+
     .sample-image {
       width: 100%;
-      height: 200px;
+      max-height: 550px;
       object-fit: cover;
       border-radius: 10px;
       margin-bottom: 15px;
     }
+
     .cta-section {
       background-color: #E4B7A0;
       border-radius: 20px;
@@ -108,38 +126,46 @@
       text-align: center;
       margin: 50px 0;
     }
+
     .cta-section h3 {
       color: white;
       margin-bottom: 20px;
     }
+
     .cta-section p {
       color: white;
       opacity: 0.9;
       margin-bottom: 30px;
     }
+
     .navbar-brand {
       font-size: 1.5rem;
       font-weight: bold;
       color: #505050 !important;
     }
+
     .nav-buttons {
       display: flex;
       gap: 10px;
     }
+
     .stats-section {
       background-color: #c1f0f6;
       border-radius: 20px;
       padding: 40px;
       margin: 40px 0;
     }
+
     .stat-item {
       text-align: center;
     }
+
     .stat-number {
       font-size: 2.5rem;
       font-weight: bold;
       color: #505050;
     }
+
     .stat-label {
       color: #505050;
       opacity: 0.8;
@@ -163,7 +189,8 @@
   <div class="hero-section">
     <div class="container">
       <h1 class="hero-title">Share Your Animal Stories 🐾</h1>
-      <p class="hero-subtitle">Connect with fellow animal lovers and share heartwarming moments with pets, strays, and wildlife</p>
+      <p class="hero-subtitle">Connect with fellow animal lovers and share heartwarming moments with pets, strays, and
+        wildlife</p>
       <a href="/register" class="btn btn-custom btn-lg">Join Our Community</a>
     </div>
   </div>
@@ -175,61 +202,58 @@
         <div class="card feature-card">
           <div class="feature-icon">🐶</div>
           <h5 class="card-title">Pet Stories</h5>
-          <p class="card-text">Share adorable moments and funny stories about your beloved pets. From playful puppies to lazy cats!</p>
+          <p class="card-text">Share adorable moments and funny stories about your beloved pets. From playful puppies to
+            lazy cats!</p>
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <div class="card feature-card">
           <div class="feature-icon">🦊</div>
           <h5 class="card-title">Wildlife Encounters</h5>
-          <p class="card-text">Document amazing wildlife sightings and share your adventures in nature with fellow animal enthusiasts.</p>
+          <p class="card-text">Document amazing wildlife sightings and share your adventures in nature with fellow
+            animal enthusiasts.</p>
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <div class="card feature-card">
           <div class="feature-icon">❤️</div>
           <h5 class="card-title">Rescue Stories</h5>
-          <p class="card-text">Inspire others with heartwarming rescue stories and help raise awareness about animal welfare.</p>
+          <p class="card-text">Be an inspiration to others by sharing heartwarming rescue stories and help raise
+            awareness about animal welfare.</p>
         </div>
       </div>
     </div>
 
-    <!-- Sample Posts Preview -->
+    <!-- Posts Preview -->
     <div class="row">
       <div class="col-md-8">
         <h3 class="mb-4">Recent Community Posts</h3>
-        
-        <div class="sample-post">
-          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&h=300&fit=crop" class="sample-image" alt="Golden Retriever" />
-          <h5>Meet Charlie - My Golden Retriever's First Beach Day! 🏖️</h5>
-          <p class="text-muted mb-2">Posted 2 hours ago</p>
-          <p>Charlie couldn't contain his excitement when he saw the ocean for the first time. His tail was wagging so fast it looked like a helicopter! 🐕</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="text-muted">❤️ 24 Likes</span>
-            <small class="text-muted">Join to interact with posts!</small>
-          </div>
-        </div>
 
-        <div class="sample-post">
-          <h5>Rescued a Stray Kitten Today 🐱</h5>
-          <p class="text-muted mb-2">Posted 5 hours ago</p>
-          <p>Found this little guy hiding under my car during the rain. He's now safe, warm, and purring loudly while drinking milk. Sometimes the best things happen unexpectedly!</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="text-muted">❤️ 47 Likes</span>
-            <small class="text-muted">Join to interact with posts!</small>
-          </div>
-        </div>
-
-        <div class="sample-post">
-          <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=500&h=300&fit=crop" class="sample-image" alt="Colorful Birds" />
-          <h5>Spotted These Beautiful Birds in My Backyard! 🦜</h5>
-          <p class="text-muted mb-2">Posted 1 day ago</p>
-          <p>Nature never fails to amaze me. These colorful visitors made my morning so much brighter. I think they're building a nest in our old oak tree!</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="text-muted">❤️ 32 Likes</span>
-            <small class="text-muted">Join to interact with posts!</small>
-          </div>
-        </div>
+        <% if (posts.length===0) { %>
+          <p>No posts available yet. Be the first to share your story!</p>
+          <% } else { %>
+            <% posts.forEach(post=> { %>
+              <div class="sample-post mb-4">
+                <% if (post.image) { %>
+                  <img src="<%= post.image %>" class="sample-image mb-2" alt="Post Image">
+                  <% } %>
+                    <h5>
+                      <%= post.title %>
+                    </h5>
+                    <p class="text-muted mb-2">Posted on <%= new Date(post.created_at).toLocaleString("en-US", {
+                        year: "numeric" , month: "short" , day: "numeric" , hour: "numeric" , minute: "2-digit" , hour12:
+                        true }) %>
+                    </p>
+                    <p>
+                      <%= post.content %>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="text-muted">❤️ <%= post.like_count || 0 %> Likes</span>
+                      <small class="text-muted">Join to interact with posts!</small>
+                    </div>
+              </div>
+              <% }); %>
+                <% } %>
       </div>
 
       <div class="col-md-4">
@@ -270,50 +294,51 @@
       </div>
     </div>
 
-    <!-- Call to Action -->
-    <div class="cta-section">
-      <h3>Ready to Share Your Animal Stories?</h3>
-      <p>Join our community of animal lovers and start sharing your heartwarming stories, helpful tips, and amazing wildlife encounters!</p>
-      <div class="d-flex justify-content-center gap-3">
-        <a href="/register" class="btn btn-custom btn-lg">Create Account</a>
-        <a href="/login" class="btn btn-custom btn-lg">Sign In</a>
+      <!-- Call to Action -->
+      <div class="cta-section">
+        <h3>Ready to Share Your Animal Stories?</h3>
+        <p>Join our community of animal lovers and start sharing your heartwarming stories, helpful tips, and amazing
+          wildlife encounters!</p>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="/register" class="btn btn-custom btn-lg">Create Account</a>
+          <a href="/login" class="btn btn-custom btn-lg">Sign In</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Footer -->
-  <div class="footer">
-    <p>&copy; 2025 Pet Lovers Blog. Connecting animal lovers worldwide. All rights reserved.</p>
-  </div>
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; 2025 Pet Lovers Blog. Connecting animal lovers worldwide. All rights reserved.</p>
+    </div>
 
-  <script>
-    // Add some simple animations
-    document.addEventListener('DOMContentLoaded', function() {
-      // Animate feature cards on scroll
-      const cards = document.querySelectorAll('.feature-card');
-      
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
-      
-      const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
+    <script>
+      // Add some simple animations
+      document.addEventListener('DOMContentLoaded', function () {
+        // Animate feature cards on scroll
+        const cards = document.querySelectorAll('.feature-card');
+
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, observerOptions);
+
+        cards.forEach(card => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          card.style.transition = 'all 0.6s ease';
+          observer.observe(card);
         });
-      }, observerOptions);
-      
-      cards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'all 0.6s ease';
-        observer.observe(card);
       });
-    });
-  </script>
+    </script>
 </body>
 
 </html>

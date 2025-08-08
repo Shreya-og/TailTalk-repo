@@ -122,12 +122,24 @@
       <!-- Right Column: About + Form -->
       <div class="col-md-4">
         <!-- About Me Card -->
-        <div class="card about-card p-3 mb-4">
-          <h5 class="card-title">About Me</h5>
-          <p class="card-text">
-            I’m an animal lover who created this blog to share cute moments,
-            helpful tips, and connect with fellow pet lovers!
-          </p>
+      
+        <div class="col-md-4" style="max-width: 415px; min-width: 415px;">
+          <div class="card about-card p-3 mb-4">
+            <h5 class="card-title">About Me</h5>
+            <!-- Static text -->
+            <p id="aboutText" class="card-text">
+              <%= aboutMe %>
+            </p>
+      
+            <!-- Edit form (hidden by default) -->
+            <form id="aboutForm" action="/update-about" method="POST" hidden>
+              <textarea name="about" class="form-control mb-2" rows="3"><%= aboutMe %></textarea>
+              <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </form>
+      
+            <!-- Edit button -->
+            <button id="editBtn" class="btn post-btn mt-2" onclick="editAbout()">Edit</button>
+          </div>
         </div>
 
         <!-- New Post Form -->
@@ -149,7 +161,13 @@
   <div class="footer">
     <p>&copy; 2025 Pet Blog. All rights reserved.</p>
   </div>
-  <script src="/js/script.js"></script>
+  <script>
+    function editAbout() {
+      document.getElementById("aboutText").hidden = true;
+      document.getElementById("editBtn").hidden = true;
+      document.getElementById("aboutForm").hidden = false;
+    }
+  </script>
 </body>
 
 </html>
