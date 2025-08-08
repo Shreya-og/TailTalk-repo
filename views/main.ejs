@@ -27,6 +27,12 @@
       background-color: #c1f0f6;
     }
 
+    .navbar .container-fluid {
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+
+
     .card {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     }
@@ -176,58 +182,20 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
+    <div class="container-fluid">
       <a class="navbar-brand" href="/">🐾 Pet Lovers Blog</a>
       <div class="nav-buttons">
-        <a href="/register" class="btn btn-custom">Register</a>
-        <a href="/login" class="btn btn-custom">Login</a>
+        <a href="/user" class="btn btn-custom">My blog</a>
+        <a href="/logout" class="btn btn-custom">Logout</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <div class="container">
-      <h1 class="hero-title">Share Your Animal Stories 🐾</h1>
-      <p class="hero-subtitle">Connect with fellow animal lovers and share heartwarming moments with pets, strays, and
-        wildlife</p>
-      <a href="/register" class="btn btn-custom btn-lg">Join Our Community</a>
-    </div>
-  </div>
-
-  <!-- Features Section -->
+  <!-- Posts Preview -->
   <div class="container">
-    <div class="row mb-5">
-      <div class="col-md-4 mb-4">
-        <div class="card feature-card">
-          <div class="feature-icon">🐶</div>
-          <h5 class="card-title">Pet Stories</h5>
-          <p class="card-text">Share adorable moments and funny stories about your beloved pets. From playful puppies to
-            lazy cats!</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="card feature-card">
-          <div class="feature-icon">🦊</div>
-          <h5 class="card-title">Wildlife Encounters</h5>
-          <p class="card-text">Document amazing wildlife sightings and share your adventures in nature with fellow
-            animal enthusiasts.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="card feature-card">
-          <div class="feature-icon">❤️</div>
-          <h5 class="card-title">Rescue Stories</h5>
-          <p class="card-text">Be an inspiration to others by sharing heartwarming rescue stories and help raise
-            awareness about animal welfare.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Posts Preview -->
     <div class="row">
       <div class="col-md-8">
-        <h3 class="mb-4">Recent Community Posts</h3>
+        <h1 class="my-5">Explore and Interact with Recent Community Posts</h1>
 
         <% if (posts.length===0) { %>
           <p>No posts available yet. Be the first to share your story!</p>
@@ -240,7 +208,7 @@
                     <h5>
                       <%= post.title %>
                     </h5>
-                    <p class="text-muted mb-2">Posted on <%= new Date(post.created_at).toLocaleString("en-US", {
+                    <p class="text-muted mb-2"><%= new Date(post.created_at).toLocaleString("en-US", {
                         year: "numeric" , month: "short" , day: "numeric" , hour: "numeric" , minute: "2-digit" , hour12:
                         true }) %>
                     </p>
@@ -248,8 +216,11 @@
                       <%= post.content %>
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
-                      <span class="text-muted">❤️ <%= post.like_count || 0 %> Likes</span>
-                      <small class="text-muted">Join to interact with posts!</small>
+                        <form action="/like/<%= post.id %>" method="POST">
+                            <button class="btn like-btn" type="submit" <%=likedPostIds.includes(post.id) ? 'disabled' : '' %>>
+                                ❤️ <%= post.like_count %> Likes
+                            </button>
+                        </form>
                     </div>
               </div>
               <% }); %>
@@ -293,17 +264,6 @@
         </div>
       </div>
     </div>
-
-      <!-- Call to Action -->
-      <div class="cta-section">
-        <h3>Ready to Share Your Animal Stories?</h3>
-        <p>Join our community of animal lovers and start sharing your heartwarming stories, helpful tips, and amazing
-          wildlife encounters!</p>
-        <div class="d-flex justify-content-center gap-3">
-          <a href="/register" class="btn btn-custom btn-lg">Create Account</a>
-          <a href="/login" class="btn btn-custom btn-lg">Sign In</a>
-        </div>
-      </div>
   </div>
 
     <!-- Footer -->
@@ -312,7 +272,6 @@
     </div>
 
     <script>
-      // Add some simple animations
       document.addEventListener('DOMContentLoaded', function () {
         // Animate feature cards on scroll
         const cards = document.querySelectorAll('.feature-card');

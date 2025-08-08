@@ -125,10 +125,37 @@ app.get("/user", async (req, res) => {
   }
 });
 
+app.get("/main", async (req, res) => {
+  if (req.isAuthenticated()) {
+    const posts = await db.query(`
+  SELECT 
+    posts.*, 
+    COUNT(likes.id) AS like_count
+  FROM posts
+  LEFT JOIN likes ON posts.id = likes.post_id
+  WHERE posts.user_id = $1
+  GROUP BY posts.id
+  ORDER BY posts.created_at DESC;`, [req.user.id]);
+
+    const likedPosts = await db.query(
+      "SELECT post_id FROM likes WHERE user_id = $1",
+      [req.user.id]
+    );
+    const likedPostIds = likedPosts.rows.map(row => row.post_id);
+    res.render("main.ejs", {
+      posts: posts.rows,
+      username: req.user.username,
+      likedPostIds
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
 app.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect: "/user",
+    successRedirect: "/main",
     failureRedirect: "/login",
     failureMessage: true
   })
