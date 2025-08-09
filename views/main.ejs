@@ -2,301 +2,326 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pet Lovers Blog - Share Your Animal Stories</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    html {
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Lovers Blog - Share Your Animal Stories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        html {
+            box-sizing: border-box;
+        }
 
-    *,
-    *:before,
-    *:after {
-      box-sizing: inherit;
-    }
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
 
-    body {
-      background-color: #ffdac1 !important;
-      color: #505050;
-      font-family: "Poppins", sans-serif;
-    }
+        body {
+            background-color: #ffdac1 !important;
+            color: #505050;
+            font-family: "Poppins", sans-serif;
+        }
 
-    .navbar {
-      background-color: #c1f0f6;
-    }
+        .navbar {
+            background-color: #c1f0f6;
+        }
 
-    .navbar .container-fluid {
-      padding-left: 50px;
-      padding-right: 50px;
-    }
+        .navbar .container-fluid {
+            padding-left: 50px;
+            padding-right: 50px;
+        }
 
 
-    .card {
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    }
+        .card {
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .post-card {
-      background-color: #fdfd96;
-      margin-bottom: 20px;
-      border-radius: 10px;
-    }
+        .post-card {
+            background-color: #fdfd96;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
 
-    .card-title {
-      color: #505050;
-    }
+        .card-title {
+            color: #505050;
+        }
 
-    .btn-custom {
-      background-color: #ffb6b9;
-      border: none;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 5px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
+        .btn-custom {
+            background-color: #ffb6b9;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
 
-    .btn-custom:hover {
-      background-color: #ff999c;
-      color: white;
-      transform: translateY(-2px);
-    }
+        .btn-custom:hover {
+            background-color: #ff999c;
+            color: white;
+            transform: translateY(-2px);
+        }
 
-    .footer {
-      background-color: #c1f0f6;
-      text-align: center;
-      padding: 20px;
-      margin-top: 50px;
-    }
+        .btn {
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
 
-    .hero-section {
-      background: linear-gradient(135deg, #c1f0f6 0%, #ffdac1 100%);
-      padding: 80px 0;
-      text-align: center;
-      border-radius: 0 0 50px 50px;
-      margin-bottom: 50px;
-    }
+        .btn:hover {
+            background: #ff999c;
+            color: black;
+        }
 
-    .hero-title {
-      font-size: 3.5rem;
-      font-weight: bold;
-      color: #505050;
-      margin-bottom: 20px;
-    }
+        .like-btn {
+            background: #ffb6b9;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            width: 8rem;
+        }
 
-    .hero-subtitle {
-      font-size: 1.3rem;
-      color: #505050;
-      margin-bottom: 30px;
-      opacity: 0.8;
-    }
+        .footer {
+            background-color: #c1f0f6;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
 
-    .feature-card {
-      background-color: #C1F0DC;
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
+        .hero-section {
+            background: linear-gradient(135deg, #c1f0f6 0%, #ffdac1 100%);
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 0 0 50px 50px;
+            margin-bottom: 50px;
+        }
 
-    .feature-card:hover {
-      transform: translateY(-5px);
-    }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #505050;
+            margin-bottom: 20px;
+        }
 
-    .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #505050;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
 
-    .sample-post {
-      background-color: #fdfd96;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
+        .feature-card {
+            background-color: #C1F0DC;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
 
-    .sample-image {
-      width: 100%;
-      max-height: 550px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
 
-    .cta-section {
-      background-color: #E4B7A0;
-      border-radius: 20px;
-      padding: 40px;
-      text-align: center;
-      margin: 50px 0;
-    }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
 
-    .cta-section h3 {
-      color: white;
-      margin-bottom: 20px;
-    }
+        .sample-post {
+            background-color: #fdfd96;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
 
-    .cta-section p {
-      color: white;
-      opacity: 0.9;
-      margin-bottom: 30px;
-    }
+        .sample-image {
+            width: 100%;
+            max-height: 550px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
 
-    .navbar-brand {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #505050 !important;
-    }
+        .cta-section {
+            background-color: #E4B7A0;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 50px 0;
+        }
 
-    .nav-buttons {
-      display: flex;
-      gap: 10px;
-    }
+        .cta-section h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
 
-    .stats-section {
-      background-color: #c1f0f6;
-      border-radius: 20px;
-      padding: 40px;
-      margin: 40px 0;
-    }
+        .cta-section p {
+            color: white;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
 
-    .stat-item {
-      text-align: center;
-    }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #505050 !important;
+        }
 
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #505050;
-    }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
 
-    .stat-label {
-      color: #505050;
-      opacity: 0.8;
-    }
-  </style>
+        .stats-section {
+            background-color: #c1f0f6;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 0 0 40px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #505050;
+        }
+
+        .stat-label {
+            color: #505050;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">🐾 Pet Lovers Blog</a>
-      <div class="nav-buttons">
-        <a href="/user" class="btn btn-custom">My blog</a>
-        <a href="/logout" class="btn btn-custom">Logout</a>
-      </div>
-    </div>
-  </nav>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🐾 Pet Lovers Blog</a>
+            <div class="nav-buttons">
+                <a href="/user" class="btn btn-custom">My blog</a>
+                <a href="/logout" class="btn btn-custom">Logout</a>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Posts Preview -->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <h1 class="my-5">Explore and Interact with Recent Community Posts</h1>
+    <!-- Posts Preview -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="my-5">Explore and Interact with Recent Community Posts</h1>
+            </div>
 
-        <% if (posts.length===0) { %>
-          <p>No posts available yet. Be the first to share your story!</p>
-          <% } else { %>
-            <% posts.forEach(post=> { %>
-              <div class="sample-post mb-4">
-                <% if (post.image) { %>
-                  <img src="<%= post.image %>" class="sample-image mb-2" alt="Post Image">
-                  <% } %>
-                    <h5>
-                      <%= post.title %>
-                    </h5>
-                    <p class="text-muted mb-2"><%= new Date(post.created_at).toLocaleString("en-US", {
-                        year: "numeric" , month: "short" , day: "numeric" , hour: "numeric" , minute: "2-digit" , hour12:
-                        true }) %>
-                    </p>
-                    <p>
-                      <%= post.content %>
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <form action="/like/<%= post.id %>" method="POST">
-                            <button class="btn like-btn" type="submit" <%=likedPostIds.includes(post.id) ? 'disabled' : '' %>>
-                                ❤️ <%= post.like_count %> Likes
-                            </button>
-                        </form>
+                <div class="col-md-8">
+                <% if (posts.length===0) { %>
+                    <p>No posts available yet. Be the first to share your story!</p>
+                    <% } else { %>
+                        <% posts.forEach(post=> { %>
+                            <div class="sample-post mb-4">
+                                <% if (post.image) { %>
+                                    <img src="<%= post.image %>" class="sample-image mb-2" alt="Post Image">
+                                    <% } %>
+                                        <h5>
+                                            <%= post.title %>
+                                        </h5>
+                                        <p class="text-muted mb-2">
+                                            <%= new Date(post.created_at).toLocaleString("en-US", { year: "numeric" ,
+                                                month: "short" , day: "numeric" , hour: "numeric" , minute: "2-digit" ,
+                                                hour12: true }) %>
+                                        </p>
+                                        <p>
+                                            <%= post.content %>
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <form action="/like/<%= post.id %>" method="POST">
+                                                <button class="btn like-btn" type="submit"
+                                                    <%=likedPostIds.includes(post.id) ? 'disabled' : '' %>>
+                                                    ❤️ <%= post.like_count %> Likes
+                                                </button>
+                                            </form>
+                                        </div>
+                            </div>
+                            <% }); %>
+                                <% } %>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Community Stats -->
+                <div class="stats-section">
+                    <h5 class="text-center mb-4">Our Growing Community</h5>
+                    <div class="row">
+                        <div class="col-6 stat-item">
+                            <div class="stat-number">2.5K</div>
+                            <div class="stat-label">Animal Lovers</div>
+                        </div>
+                        <div class="col-6 stat-item">
+                            <div class="stat-number">850</div>
+                            <div class="stat-label">Stories Shared</div>
+                        </div>
+                        <div class="col-6 stat-item">
+                            <div class="stat-number">15K</div>
+                            <div class="stat-label">Hearts Given</div>
+                        </div>
+                        <div class="col-6 stat-item">
+                            <div class="stat-number">120</div>
+                            <div class="stat-label">Rescues Helped</div>
+                        </div>
                     </div>
-              </div>
-              <% }); %>
-                <% } %>
-      </div>
+                </div>
 
-      <div class="col-md-4">
-        <!-- Community Stats -->
-        <div class="stats-section">
-          <h5 class="text-center mb-4">Our Growing Community</h5>
-          <div class="row">
-            <div class="col-6 stat-item">
-              <div class="stat-number">2.5K</div>
-              <div class="stat-label">Animal Lovers</div>
+                <!-- About Section -->
+                <div class="card feature-card">
+                    <h5 class="card-title">Why Join Us?</h5>
+                    <ul class="text-start">
+                        <li>Share your animal experiences</li>
+                        <li>Connect with like-minded people</li>
+                        <li>Get pet care tips and advice</li>
+                        <li>Support animal rescue efforts</li>
+                        <li>Discover amazing wildlife stories</li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-6 stat-item">
-              <div class="stat-number">850</div>
-              <div class="stat-label">Stories Shared</div>
-            </div>
-            <div class="col-6 stat-item">
-              <div class="stat-number">15K</div>
-              <div class="stat-label">Hearts Given</div>
-            </div>
-            <div class="col-6 stat-item">
-              <div class="stat-number">120</div>
-              <div class="stat-label">Rescues Helped</div>
-            </div>
-          </div>
         </div>
-
-        <!-- About Section -->
-        <div class="card feature-card">
-          <h5 class="card-title">Why Join Us?</h5>
-          <ul class="text-start">
-            <li>Share your animal experiences</li>
-            <li>Connect with like-minded people</li>
-            <li>Get pet care tips and advice</li>
-            <li>Support animal rescue efforts</li>
-            <li>Discover amazing wildlife stories</li>
-          </ul>
-        </div>
-      </div>
     </div>
-  </div>
 
     <!-- Footer -->
     <div class="footer">
-      <p>&copy; 2025 Pet Lovers Blog. Connecting animal lovers worldwide. All rights reserved.</p>
+        <p>&copy; 2025 Pet Lovers Blog. Connecting animal lovers worldwide. All rights reserved.</p>
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        // Animate feature cards on scroll
-        const cards = document.querySelectorAll('.feature-card');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Animate feature cards on scroll
+            const cards = document.querySelectorAll('.feature-card');
 
-        const observerOptions = {
-          threshold: 0.1,
-          rootMargin: '0px 0px -50px 0px'
-        };
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
 
-        const observer = new IntersectionObserver(function (entries) {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.style.opacity = '1';
-              entry.target.style.transform = 'translateY(0)';
-            }
-          });
-        }, observerOptions);
+            const observer = new IntersectionObserver(function (entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
 
-        cards.forEach(card => {
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(20px)';
-          card.style.transition = 'all 0.6s ease';
-          observer.observe(card);
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
         });
-      });
     </script>
 </body>
 

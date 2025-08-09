@@ -133,9 +133,8 @@ app.get("/main", async (req, res) => {
     COUNT(likes.id) AS like_count
   FROM posts
   LEFT JOIN likes ON posts.id = likes.post_id
-  WHERE posts.user_id = $1
   GROUP BY posts.id
-  ORDER BY posts.created_at DESC;`, [req.user.id]);
+  ORDER BY posts.created_at DESC;`);
 
     const likedPosts = await db.query(
       "SELECT post_id FROM likes WHERE user_id = $1",
@@ -185,7 +184,7 @@ app.post("/register", async (req, res) => {
           const user = result.rows[0];
           req.login(user, (err) => {
             console.log("success");
-            res.redirect("/user");
+            res.redirect("/main");
           });
         }
       });
@@ -310,7 +309,7 @@ app.post("/like/:id", async (req, res) => {
       req.user.id,
       req.params.id,
     ]);
-    res.redirect("/user");
+    res.redirect(req.get("Referer") || "/");
   } catch (err) {
     res.send("Error liking post");
   }
