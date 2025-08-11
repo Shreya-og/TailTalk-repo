@@ -30,6 +30,8 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(express.json());
+
 
 app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 
@@ -301,19 +303,52 @@ app.post("/delete/:id", async (req, res) => {
   }
 });
 
-// Like Post
+// Like a Post
 app.post("/like/:id", async (req, res) => {
-  if (!req.isAuthenticated()) return res.redirect("/login");
+  if (!req.isAuthenticated()) {
+    if (req.xhr || req.get("Accept")?.includes("application/json")) {
+      return res.status(401).json({ error: "unauthenticated" });
+    }
+    return res.redirect("/login");
+  }
   try {
-    await db.query("INSERT INTO likes (user_id, post_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [
-      req.user.id,
-      req.params.id,
-    ]);
-    res.redirect(req.get("Referer") || "/");
+    const existingLike = await db.query(
+      "SELECT id FROM likes WHERE user_id = $1 AND post_id = $2",
+      [req.user.id, req.params.id]
+    );
+
+    if (existingLike.rowCount > 0) {
+      // Unlike
+      await db.query(
+        "DELETE FROM likes WHERE user_id = $1 AND post_id = $2",
+        [req.user.id, req.params.id]
+      );
+    } else {
+      // Like
+      await db.query(
+        "INSERT INTO likes (user_id, post_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+        [req.user.id, req.params.id]
+      );
+    }
+    const lc = await db.query(
+      "SELECT COUNT(*)::int AS count FROM likes WHERE post_id = $1",
+      [req.params.id]
+    );
+    const likeCount = lc.rows[0].count;
+    
+    return res.json({
+      like_count: likeCount,
+      liked: existingLike.rowCount === 0 
+    });
   } catch (err) {
+    console.error(err);
+    if (req.xhr || req.get("Accept")?.includes("application/json")) {
+      return res.status(500).json({ error: "server_error" });
+    }
     res.send("Error liking post");
   }
 });
+
 
 //ADD COMMENT
 app.post("/comment/:id", async (req, res) => {

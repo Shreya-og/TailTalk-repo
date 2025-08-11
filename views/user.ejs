@@ -15,6 +15,7 @@
     <div class="container-fluid">
       <a class="navbar-brand" href="/">🐾 Pet Blog</a>
       <div class="nav-buttons">
+        <a href="/main" class="btn btn-custom">All posts</a>
         <a href="/logout" class="btn btn-custom">Logout</a>
       </div>
     </div>
@@ -92,17 +93,18 @@
                     </p>
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-3">
-                    <form action="/like/<%= post.id %>" method="POST">
-                      <button class="btn like-btn" type="submit" <%=likedPostIds.includes(post.id) ? 'disabled' : '' %>>
-                        ❤️ <%= post.like_count %> Likes 
+                    <form class="like-form" action="/like/<%= post.id %>" method="POST">
+                      <button class="btn like-btn <%= likedPostIds.includes(post.id) ? 'liked' : '' %>" 
+                        type="button" data-post-id="<%= post.id %>">
+                        ❤️ <span id="like-count-<%= post.id %>"><%= post.like_count %></span> Likes
                       </button>
                     </form>
                   
                     <div class="d-flex gap-2">
                       <form action="/edit/<%= post.id %>" method="GET">
                         <button class="btn icon-btn" type="submit" title="Edit">
-                          <img width="32" height="32"
-                            src="https://img.icons8.com/sf-black-filled/64/F25081/create-new.png" alt="create-new" />
+                          <img width="32" height="32" src="https://img.icons8.com/sf-black-filled/64/F25081/create-new.png"
+                            alt="create-new" />
                         </button>
                       </form>
                       <form action="/delete/<%= post.id %>" method="POST"
@@ -167,6 +169,49 @@
       document.getElementById("editBtn").hidden = true;
       document.getElementById("aboutForm").hidden = false;
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          let postId = this.getAttribute('data-post-id');
+
+
+          fetch(`/like/${postId}`, {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type': 'application/json',
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({ post_id: postId })
+          })
+            .then(res => {
+              if (!res.ok) {
+                if (res.status === 401) {
+                  window.location.href = "/login";
+                }
+                throw new Error(`HTTP ${res.status}`);
+              }
+              return res.json();
+            })
+            .then(data => {
+              document.getElementById(`like-count-${postId}`).textContent = data.like_count;
+
+              if (data.liked) {
+                this.classList.add("liked");
+              } else {
+                this.classList.remove("liked");
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              this.disabled = false;
+            });
+        });
+      });
+
+    });
   </script>
 </body>
 

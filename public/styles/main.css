@@ -11,19 +11,25 @@ body {
   color: #505050; /* Graphite Gray */
   font-family: "Poppins", sans-serif;
 }
+
 .navbar {
-  background-color: #c1f0f6; /* Mint Sky */
+  background-color: #c1f0f6;
+  /* Mint Sky */
 }
-.card{
+.navbar .container-fluid {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.card {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 .post-card {
-  /* background-color: #ffdac1;  Peach Sherbet  */
   background-color: #fdfd96; /* Lemon Chiffon */
   margin-bottom: 20px;
   border-radius: 10px;
 }
-.card-title{
+.card-title {
   color: #505050;
 }
 .btn-custom {
@@ -39,7 +45,7 @@ body {
 }
 
 .about-card {
-  background-color: #C1F0DC;
+  background-color: #c1f0dc;
   border-radius: 10px;
 }
 
@@ -55,20 +61,20 @@ body {
   border-radius: 5px;
 }
 
-.post-form{
-  background-color: #C1F0DC;
+.post-form {
+  background-color: #c1f0dc;
 }
 
-.post-btn{
-  background-color: #E4B7A0;
+.post-btn {
+  background-color: #e4b7a0;
   color: #fff;
 }
 
-.post-btn:hover{
-  background-color: #E4B7A0;
+.post-btn:hover {
+  background-color: #e4b7a0;
 }
 
-.btn{
+.btn {
   border: none;
   padding: 5px 12px;
   border-radius: 5px;
@@ -85,4 +91,7 @@ body {
   border-radius: 5px;
   font-weight: bold;
   width: 8rem;
+}
+.like-btn.liked {
+  background: #ff999c;
 }
