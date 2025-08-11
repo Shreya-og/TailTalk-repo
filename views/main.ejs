@@ -229,7 +229,7 @@
                     <% } else { %>
                         <% posts.forEach(post=> { %>
                             <div class="sample-post mb-4">
-                                <small class="text-muted mb-2 d-block">@<%= username %></small>
+                                <small class="text-muted mb-2 d-block">@<%= post.blogger_name %></small>
                                 <% if (post.image) { %>
                                     <img src="<%= post.image %>" class="sample-image mb-2" alt="Post Image">
                                     <% } %>

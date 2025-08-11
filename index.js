@@ -132,10 +132,12 @@ app.get("/main", async (req, res) => {
     const posts = await db.query(`
   SELECT 
     posts.*, 
+    users.username AS blogger_name,
     COUNT(likes.id) AS like_count
   FROM posts
+  JOIN users ON posts.user_id = users.id
   LEFT JOIN likes ON posts.id = likes.post_id
-  GROUP BY posts.id
+  GROUP BY posts.id, users.username
   ORDER BY posts.created_at DESC;`);
 
     const likedPosts = await db.query(
