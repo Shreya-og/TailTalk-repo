@@ -23,7 +23,7 @@
 
   <!-- Main Content -->
   <div class="container mt-5 mb-5">
-    <h2 class="mb-4">Welcome, <%= username %>!</h2>
+    <h2 class="mb-4">Hey, <%= username %>!</h2>
 
     <div class="row">
       <!-- Left Column: Posts -->
@@ -128,7 +128,6 @@
         <div class="col-md-4" style="max-width: 415px; min-width: 415px;">
           <div class="card about-card p-3 mb-4">
             <h5 class="card-title">About Me</h5>
-            <!-- Static text -->
             <p id="aboutText" class="card-text">
               <%= aboutMe %>
             </p>
@@ -138,8 +137,6 @@
               <textarea name="about" class="form-control mb-2" rows="3"><%= aboutMe %></textarea>
               <button type="submit" class="btn btn-success btn-sm">Save</button>
             </form>
-      
-            <!-- Edit button -->
             <button id="editBtn" class="btn post-btn mt-2" onclick="editAbout()">Edit</button>
           </div>
         </div>

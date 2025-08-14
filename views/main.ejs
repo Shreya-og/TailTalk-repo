@@ -92,7 +92,7 @@
         .footer {
             background-color: #c1f0f6;
             text-align: center;
-            padding: 20px;
+            padding: 10px;
             margin-top: 50px;
         }
 
@@ -221,7 +221,15 @@
                     <% } else { %>
                         <% posts.forEach(post=> { %>
                             <div class="sample-post mb-4">
-                                <small class="text-muted mb-2 d-block">@<%= post.blogger_name %></small>
+                                <small class="text-muted mb-2 d-block">
+                                    <% if (post.blogger_id===user_id) { %>
+                                        <a href="/user" class="text-decoration-none text-muted">@<%= post.blogger_name %></a>
+                                        <% } else { %>
+                                            <a href="/<%= encodeURIComponent(post.blogger_name) %>/<%= post.blogger_id %>" 
+                                                class="text-decoration-none text-muted">@<%= post.blogger_name %></a>
+                                            <% } %>
+                                </small>
+                            
                                 <% if (post.image) { %>
                                     <img src="<%= post.image %>" class="sample-image mb-2" alt="Post Image">
                                     <% } %>
@@ -229,9 +237,8 @@
                                             <%= post.title %>
                                         </h5>
                                         <p class="text-muted mb-2">
-                                            <%= new Date(post.created_at).toLocaleString("en-US", { year: "numeric" ,
-                                                month: "short" , day: "numeric" , hour: "numeric" , minute: "2-digit" ,
-                                                hour12: true }) %>
+                                            <%= new Date(post.created_at).toLocaleString("en-US", { year: "numeric" , month: "short" ,
+                                                day: "numeric" , hour: "numeric" , minute: "2-digit" , hour12: true }) %>
                                         </p>
                                         <p>
                                             <%= post.content %>

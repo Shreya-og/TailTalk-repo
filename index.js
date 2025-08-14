@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import passport from "passport";
 import { Strategy } from "passport-local";
 import session from "express-session";
+import validator from "validator";
 import env from "dotenv";
 import multer from "multer";
 import path from "path";
@@ -78,11 +79,19 @@ app.get('/', async (req, res) => {
 
 
 app.get("/login", (req, res) => {
-  res.render("login.ejs");
+  if (req.isAuthenticated()){
+    res.redirect("/main");
+  } else {
+    res.render("login.ejs");
+  }
 });
 
 app.get("/register", (req, res) => {
-  res.render("register.ejs");
+  if (req.isAuthenticated()){
+    res.redirect("/main");
+  } else {
+    res.render("register.ejs");
+  }
 });
 
 app.get("/logout", (req, res) => {
@@ -133,11 +142,12 @@ app.get("/main", async (req, res) => {
   SELECT 
     posts.*, 
     users.username AS blogger_name,
+    users.id AS blogger_id,
     COUNT(likes.id) AS like_count
   FROM posts
   JOIN users ON posts.user_id = users.id
   LEFT JOIN likes ON posts.id = likes.post_id
-  GROUP BY posts.id, users.username
+  GROUP BY posts.id, users.id
   ORDER BY posts.created_at DESC;`);
 
     const likedPosts = await db.query(
@@ -148,6 +158,7 @@ app.get("/main", async (req, res) => {
     res.render("main.ejs", {
       posts: posts.rows,
       username: req.user.username,
+      user_id: req.user.id,
       likedPostIds
     });
   } else {
@@ -165,10 +176,14 @@ app.post(
 );
 
 app.post("/register", async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const username= req.body.username;
+  const { email, password, username } = req.body;
+  const about_me= `Hi I am ${username}— an animal lover through and through.`;
 
+
+  if (!validator.isEmail(email)) {
+    return res.status(400).send("Invalid email format");
+  }
+  
   try {
     const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
@@ -182,12 +197,12 @@ app.post("/register", async (req, res) => {
           console.error("Error hashing password:", err);
         } else {
           const result = await db.query(
-            "INSERT INTO users (email, password, username) VALUES ($1, $2, $3) RETURNING *",
-            [email, hash, username]
+            "INSERT INTO users (email, password, username, about) VALUES ($1, $2, $3, $4) RETURNING *",
+            [email, hash, username, about_me]
           );
           const user = result.rows[0];
           req.login(user, (err) => {
-            console.log("success");
+            console.log("successfully registered");
             res.redirect("/main");
           });
         }
@@ -251,7 +266,7 @@ app.post('/update-about', async (req, res) => {
     }
 });
 
-
+// NEW POST
 app.post("/add-post", upload.single("image"), async (req, res) => {
   const { title, content } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -280,18 +295,44 @@ app.get("/edit/:id", async (req, res) => {
 });
 
 // EDIT - Save the updated post
-app.post("/edit/:id", async (req, res) => {
-  const { title, content, image } = req.body;
+app.post("/edit/:id", upload.single("image"), async (req, res) => {
+  const { title, content } = req.body;
+  let imagePath = null;
+
   try {
+    const result = await db.query("SELECT image FROM posts WHERE id = $1", [req.params.id]);
+    const oldImagePath = result.rows[0]?.image;
+
+    if (req.file){
+      imagePath= `/uploads/${req.file.filename}`;
+
+      if (oldImagePath) {
+        const fullOldImagePath = path.join(__dirname, "public", oldImagePath.replace(/^\//, ""));
+        if (fs.existsSync(fullOldImagePath)) {
+          fs.unlinkSync(fullOldImagePath);
+          console.log("Deleted old image:", fullOldImagePath);
+        }
+      }
+    } else {
+      if (oldImagePath) {
+        const fullOldImagePath = path.join(__dirname, "public", oldImagePath.replace(/^\//, ""));
+        if (fs.existsSync(fullOldImagePath)) {
+          fs.unlinkSync(fullOldImagePath);
+          console.log("Deleted old image:", fullOldImagePath);
+        }
+      }
+      imagePath = null;
+    }
+
     await db.query("UPDATE posts SET title = $1, content = $2, image = $3 WHERE id = $4", [
       title,
       content,
-      image,
+      imagePath,
       req.params.id,
     ]);
     res.redirect("/user");
   } catch (err) {
-    res.send("Error editing post");
+    res.send("Error editing post:" + err);
   }
 });
 
@@ -351,21 +392,47 @@ app.post("/like/:id", async (req, res) => {
   }
 });
 
+app.get("/:blogger_name/:blogger_id", async (req, res) => {
+    const { blogger_id } = req.params;
 
-//ADD COMMENT
-app.post("/comment/:id", async (req, res) => {
-  const content = req.body.content;
-  if (!req.isAuthenticated()) return res.redirect("/login");
-  try {
-    await db.query("INSERT INTO comments (user_id, post_id, content) VALUES ($1, $2, $3)", [
-      req.user.id,
-      req.params.id,
-      content,
-    ]);
-    res.redirect("/user");
-  } catch (err) {
-    res.send("Error commenting");
-  }
+    try {
+        const result = await db.query(
+            "SELECT id, username, about FROM users WHERE id = $1",
+            [blogger_id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).send("User not found");
+        }
+        const blogger = result.rows[0];
+
+        const posts = await db.query(
+            `SELECT posts.*,
+                COUNT(likes.id) AS like_count
+             FROM posts
+             LEFT JOIN likes ON posts.id = likes.post_id
+             WHERE posts.user_id = $1
+             GROUP BY posts.id
+             ORDER BY posts.created_at DESC`,
+            [blogger_id]
+        );
+        const likedPosts = await db.query(
+          "SELECT post_id FROM likes WHERE user_id = $1",
+          [req.user.id]
+        );
+        const likedPostIds = likedPosts.rows.map((row) => row.post_id);
+
+        res.render("blogger.ejs", {
+            blogger,
+            posts: posts.rows,
+            likedPostIds,
+            user: req.user //current user
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server error");
+    }
 });
 
 
