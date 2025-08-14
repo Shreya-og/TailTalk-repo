@@ -3,7 +3,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    background-color: #ffdac1 !important;
+    color: #505050;
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
     margin: 0;
 }
 
@@ -12,7 +15,22 @@ body {
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     width: 100%;
-    max-width: 500px;
+}
+
+.card {
+  display: inline-block; 
+  width: auto; 
+  height: auto; 
+  padding: 1.5rem; 
+  margin: 2rem auto;
+  box-sizing: border-box;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  background-color: #fdfd96; /* Lemon Chiffon */
+  border-radius: 10px;
+}
+
+.card-title {
+  color: #505050;
 }
 
 h1 {
@@ -26,10 +44,10 @@ label {
     font-weight: 500;
 }
 
-input[type="text"],
-textarea {
+input{
     width: 100%;
     padding: 10px;
+    box-sizing: border-box;
     border-radius: 6px;
     border: none;
     font-size: 1rem;
@@ -51,6 +69,24 @@ button {
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s ease;
+}
+.btn {
+  border: none;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.btn-custom {
+  background: #ffb6b9;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  width: 8rem;
+}
+.btn:hover {
+  background: #ff999c;
+  color: black;
 }
 
 a {
