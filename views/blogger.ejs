@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TailTalk</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">🐾 TailTalk</a>
+      <div class="nav-buttons">
+        <a href="/main" class="btn btn-custom">All posts</a>
+        <a href="/logout" class="btn btn-custom">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-5 mb-5">
+    <h2 class="mb-4">Welcome to my Blog!</h2>
+    <div class="row">
+      <!-- Left Column: Posts -->
+      <div class="col-md-8">
+
+        <% if (posts && posts.length !== 0) { %>
+          <% posts.forEach(post=> { %>
+            <div class="card post-card p-3 mb-4">
+              <% if (post.image) { %> 
+                <img src="<%= post.image %>" class="card-img-top post-img mb-2" alt="Post Image" />
+                <% } %>
+                  <div>
+                    <h5 class="card-title mb-1">
+                      <%= post.title %>
+                    </h5>
+                    <p class="text-muted mb-2" style="font-size: 0.8rem;">
+                      <%= new Date(post.created_at).toLocaleString("en-IN", { year: "numeric" , month: "short" , day: "numeric" ,
+                        hour: "numeric" , minute: "2-digit" , hour12: true }) %>
+                    </p>
+                  
+                  
+                    <p class="card-text">
+                      <%= post.content %>
+                    </p>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <form class="like-form" action="/like/<%= post.id %>" method="POST">
+                      <button class="btn like-btn <%= likedPostIds.includes(post.id) ? 'liked' : '' %>" 
+                        type="button" data-post-id="<%= post.id %>">
+                        ❤️ <span id="like-count-<%= post.id %>"><%= post.like_count %></span> Likes
+                      </button>
+                    </form>
+                  </div>
+            </div>
+            <% }) %>
+              <% } %>
+      </div>
+
+      <!-- Right Column: About -->
+      <div class="col-md-4">
+
+        <!-- About Me Card -->
+        <div class="col-md-4" style="max-width: 415px; min-width: 415px;">
+          <div class="card about-card p-3 mb-4">
+            <h5 class="card-title">About Me</h5>
+            <p id="aboutText" class="card-text">
+              <%= blogger.about %>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <%- include("partials/footer.ejs")%>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          let postId = this.getAttribute('data-post-id');
+
+
+          fetch(`/like/${postId}`, {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type': 'application/json',
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({ post_id: postId })
+          })
+            .then(res => {
+              if (!res.ok) {
+                if (res.status === 401) {
+                  window.location.href = "/login";
+                }
+                throw new Error(`HTTP ${res.status}`);
+              }
+              return res.json();
+            })
+            .then(data => {
+              document.getElementById(`like-count-${postId}`).textContent = data.like_count;
+
+              if (data.liked) {
+                this.classList.add("liked");
+              } else {
+                this.classList.remove("liked");
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              this.disabled = false;
+            });
+        });
+      });
+
+    });
+  </script>
+</body>
+
+</html>
