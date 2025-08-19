@@ -11,14 +11,15 @@ body {
 }
 
 .container {
-    padding: 40px;
-    border-radius: 12px;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     width: 100%;
 }
 
 .card {
   display: inline-block; 
+  min-width: 30%;
   width: auto; 
   height: auto; 
   padding: 1.5rem; 
@@ -44,7 +45,7 @@ label {
     font-weight: 500;
 }
 
-input{
+input, textarea{
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -56,33 +57,23 @@ input{
 
 textarea {
     resize: vertical;
-    height: 100px;
+    min-height: 100px;
 }
 
 button {
     border: none;
-    width: 6rem !important;
-    margin-bottom: 20px;
-    padding: 10px 20px;
     font-weight: bold;
-    border-radius: 6px;
-    font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 .btn {
   border: none;
-  padding: 5px 12px;
-  border-radius: 5px;
+  margin-top: 1rem;
   font-weight: bold;
 }
 .btn-custom {
   background: #ffb6b9;
   color: #fff;
-  padding: 5px 12px;
-  border-radius: 5px;
-  font-weight: bold;
-  width: 8rem;
 }
 .btn:hover {
   background: #ff999c;
