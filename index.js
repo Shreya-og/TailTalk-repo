@@ -1,6 +1,5 @@
 import express from "express";
 import bodyParser from "body-parser";
-import pg from "pg";
 import bcrypt from "bcrypt";
 import passport from "passport";
 import { Strategy } from "passport-local";
@@ -11,6 +10,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import sql from './db.js';
 
 const app = express();
 const port = 3000;
@@ -51,26 +51,29 @@ const upload = multer({ storage });
 app.use(passport.initialize());
 app.use(passport.session());
 
-const db = new pg.Client({
-  user: process.env.PG_USER,
-  host: process.env.PG_HOST,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  port: process.env.PG_PORT,
+
+//DB HEALTH CHECK
+app.get("/health", async (req, res) => {
+  try {
+    await sql`SELECT 1`; // test query
+    res.status(200).json({ status: "ok", message: "Database connection is healthy ✅" });
+  } catch (error) {
+    console.error("Health check failed:", error);
+    res.status(500).json({ status: "error", message: "Database connection failed ❌" });
+  }
 });
-db.connect();
 
 app.get('/', async (req, res) => {
   try {
-    const result = await db.query(`
+    const result = await sql`
   SELECT 
     posts.*, 
     COUNT(likes.id) AS like_count
   FROM posts
   LEFT JOIN likes ON posts.id = likes.post_id
   GROUP BY posts.id
-  ORDER BY posts.created_at DESC;`);
-    res.render('home.ejs', { posts: result.rows });
+  ORDER BY posts.created_at DESC;`;
+    res.render('home.ejs', { posts: result });
   } catch (err) {
     console.error(err);
     res.render('home.ejs', { posts: [] });
@@ -105,28 +108,26 @@ app.get("/logout", (req, res) => {
 
 app.get("/user", async (req, res) => {
   if (req.isAuthenticated()) {
-    const posts = await db.query(`
+    const posts = await sql`
   SELECT 
     posts.*, 
     COUNT(likes.id) AS like_count
   FROM posts
   LEFT JOIN likes ON posts.id = likes.post_id
-  WHERE posts.user_id = $1
+  WHERE posts.user_id = ${req.user.id}
   GROUP BY posts.id
-  ORDER BY posts.created_at DESC;`, [req.user.id]);
+  ORDER BY posts.created_at DESC;`;
 
-    const likedPosts = await db.query(
-      "SELECT post_id FROM likes WHERE user_id = $1",
-      [req.user.id]
-    );
-    const likedPostIds = likedPosts.rows.map(row => row.post_id);
+    const likedPosts = await sql
+      `SELECT post_id FROM likes WHERE user_id = ${req.user.id};`;
+    const likedPostIds = likedPosts.map(row => row.post_id);
 
-    const result = await db.query("SELECT about FROM users WHERE id = $1", [req.user.id]);
+    const result = await sql`SELECT about FROM users WHERE id = ${req.user.id};`;
     const username= req.user.username;
-    const aboutMe= result.rows[0].about?.trim() || `Hi I am ${username}— an animal lover through and through.`;
+    const aboutMe= result[0]?.about?.trim() || `Hi I am ${username}— an animal lover through and through.`;
 
     res.render("user.ejs", {
-      posts: posts.rows,
+      posts: posts,
       username: username,
       aboutMe: aboutMe,
       likedPostIds
@@ -138,7 +139,7 @@ app.get("/user", async (req, res) => {
 
 app.get("/main", async (req, res) => {
   if (req.isAuthenticated()) {
-    const posts = await db.query(`
+    const posts = await sql`
   SELECT 
     posts.*, 
     users.username AS blogger_name,
@@ -148,15 +149,13 @@ app.get("/main", async (req, res) => {
   JOIN users ON posts.user_id = users.id
   LEFT JOIN likes ON posts.id = likes.post_id
   GROUP BY posts.id, users.id
-  ORDER BY posts.created_at DESC;`);
+  ORDER BY posts.created_at DESC;`;
 
-    const likedPosts = await db.query(
-      "SELECT post_id FROM likes WHERE user_id = $1",
-      [req.user.id]
-    );
-    const likedPostIds = likedPosts.rows.map(row => row.post_id);
+    const likedPosts = await sql`
+      SELECT post_id FROM likes WHERE user_id = ${req,user,id};`;
+    const likedPostIds = likedPosts.map(row => row.post_id);
     res.render("main.ejs", {
-      posts: posts.rows,
+      posts: posts,
       username: req.user.username,
       user_id: req.user.id,
       likedPostIds
@@ -185,24 +184,19 @@ app.post("/register", async (req, res) => {
   }
   
   try {
-    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const checkResult = await sql`SELECT * FROM users WHERE email = ${email};`;
 
-    if (checkResult.rows.length > 0) {
+    if (checkResult.length > 0) {
       res.redirect("/login");
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
           console.error("Error hashing password:", err);
         } else {
-          const result = await db.query(
-            "INSERT INTO users (email, password, username, about) VALUES ($1, $2, $3, $4) RETURNING *",
-            [email, hash, username, about_me]
-          );
-          const user = result.rows[0];
+          const result = await sql
+            `INSERT INTO users (email, password, username, about) VALUES (${email}, ${hash}, ${username}, ${about_me}) RETURNING *;`;
+          const user = result[0];
           req.login(user, (err) => {
-            console.log("successfully registered");
             res.redirect("/main");
           });
         }
@@ -218,11 +212,9 @@ passport.use(
     { usernameField: "email" },
     async function verify(email, password, cb) {
     try {
-      const result = await db.query("SELECT * FROM users WHERE email = $1 ", [
-        email,
-      ]);
-      if (result.rows.length > 0) {
-        const user = result.rows[0];
+      const result = await sql`SELECT * FROM users WHERE email = ${email};`;
+      if (result.length > 0) {
+        const user = result[0];
         const storedHashedPassword = user.password;
         bcrypt.compare(password, storedHashedPassword, (err, valid) => {
           if (err) {
@@ -254,10 +246,8 @@ app.post('/update-about', async (req, res) => {
     const userId = req.user.id;
 
     try {
-        await db.query(
-            'UPDATE users SET about = $1 WHERE id = $2',
-            [about, userId]
-        );
+        await sql
+            `UPDATE users SET about = ${about} WHERE id = ${userId};`;
 
         res.redirect('/user');
     } catch (err) {
@@ -273,10 +263,9 @@ app.post("/add-post", upload.single("image"), async (req, res) => {
 
   if (!req.isAuthenticated()) return res.redirect("/login");
   try {
-    await db.query(
-      "INSERT INTO posts (user_id, title, content, image) VALUES ($1, $2, $3, $4)",
-      [req.user.id, title, content, imagePath]
-    );
+    await sql
+      `INSERT INTO posts (user_id, title, content, image) VALUES (${req.user.id}, ${title}, ${content}, ${imagePath});`
+    ;
     res.redirect("/user");
   } catch (err) {
     console.log(err);
@@ -287,8 +276,8 @@ app.post("/add-post", upload.single("image"), async (req, res) => {
 // EDIT - Load the form pre-filled
 app.get("/edit/:id", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM posts WHERE id = $1", [req.params.id]);
-    res.render("edit.ejs", { post: result.rows[0] });
+    const result = await sql`SELECT * FROM posts WHERE id = ${req.params.id};`;
+    res.render("edit.ejs", { post: result[0] });
   } catch (err) {
     res.send("Post not found");
   }
@@ -300,8 +289,8 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
   let imagePath = null;
 
   try {
-    const result = await db.query("SELECT image FROM posts WHERE id = $1", [req.params.id]);
-    const oldImagePath = result.rows[0]?.image;
+    const result = await sql`SELECT image FROM posts WHERE id = ${req.params.id};`;
+    const oldImagePath = result[0]?.image;
 
     if (req.file){
       imagePath= `/uploads/${req.file.filename}`;
@@ -310,7 +299,6 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
         const fullOldImagePath = path.join(__dirname, "public", oldImagePath.replace(/^\//, ""));
         if (fs.existsSync(fullOldImagePath)) {
           fs.unlinkSync(fullOldImagePath);
-          console.log("Deleted old image:", fullOldImagePath);
         }
       }
     } else {
@@ -318,18 +306,12 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
         const fullOldImagePath = path.join(__dirname, "public", oldImagePath.replace(/^\//, ""));
         if (fs.existsSync(fullOldImagePath)) {
           fs.unlinkSync(fullOldImagePath);
-          console.log("Deleted old image:", fullOldImagePath);
         }
       }
       imagePath = null;
     }
 
-    await db.query("UPDATE posts SET title = $1, content = $2, image = $3 WHERE id = $4", [
-      title,
-      content,
-      imagePath,
-      req.params.id,
-    ]);
+    await sql`UPDATE posts SET title = ${title}, content = ${content}, image = ${imagePath} WHERE id = ${req.params.id};`;
     res.redirect("/user");
   } catch (err) {
     res.send("Error editing post:" + err);
@@ -339,7 +321,7 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
 //DELETE POST
 app.post("/delete/:id", async (req, res) => {
   try {
-    await db.query("DELETE FROM posts WHERE id = $1", [req.params.id]);
+    await sql`DELETE FROM posts WHERE id = ${req.params.id};`;
     res.redirect("/user");
   } catch (err) {
     res.send("Error deleting post");
@@ -355,34 +337,32 @@ app.post("/like/:id", async (req, res) => {
     return res.redirect("/login");
   }
   try {
-    const existingLike = await db.query(
-      "SELECT id FROM likes WHERE user_id = $1 AND post_id = $2",
-      [req.user.id, req.params.id]
-    );
+    const existingLike = await sql
+      `SELECT id FROM likes WHERE user_id = ${req.user.id} AND post_id = ${req.params.id};`;
 
-    if (existingLike.rowCount > 0) {
+    if (existingLike.length > 0) {
       // Unlike
-      await db.query(
-        "DELETE FROM likes WHERE user_id = $1 AND post_id = $2",
-        [req.user.id, req.params.id]
-      );
+      await sql`DELETE FROM likes WHERE user_id = ${req.user.id} AND post_id = ${req.params.id};`;
     } else {
       // Like
-      await db.query(
-        "INSERT INTO likes (user_id, post_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
-        [req.user.id, req.params.id]
-      );
+      await sql`
+        INSERT INTO likes (user_id, post_id) 
+        VALUES (${req.user.id}, ${req.params.id})
+        ON CONFLICT DO NOTHING;
+      `;
     }
-    const lc = await db.query(
-      "SELECT COUNT(*)::int AS count FROM likes WHERE post_id = $1",
-      [req.params.id]
-    );
-    const likeCount = lc.rows[0].count;
-    
+    const lc = await sql`
+      SELECT COUNT(*)::int AS count 
+      FROM likes 
+      WHERE post_id = ${req.params.id};
+    `;
+    const likeCount = lc[0].count;
+
     return res.json({
       like_count: likeCount,
-      liked: existingLike.rowCount === 0 
+      liked: existingLike.length === 0,
     });
+    
   } catch (err) {
     console.error(err);
     if (req.xhr || req.get("Accept")?.includes("application/json")) {
@@ -396,35 +376,31 @@ app.get("/:blogger_name/:blogger_id", async (req, res) => {
     const { blogger_id } = req.params;
 
     try {
-        const result = await db.query(
-            "SELECT id, username, about FROM users WHERE id = $1",
-            [blogger_id]
-        );
+        const result = await sql
+            `SELECT id, username, about FROM users WHERE id = ${blogger_id};`;
 
-        if (result.rows.length === 0) {
+        if (result.length === 0) {
             return res.status(404).send("User not found");
         }
-        const blogger = result.rows[0];
+        const blogger = result[0];
 
-        const posts = await db.query(
+        const posts = await sql
             `SELECT posts.*,
                 COUNT(likes.id) AS like_count
              FROM posts
              LEFT JOIN likes ON posts.id = likes.post_id
-             WHERE posts.user_id = $1
+             WHERE posts.user_id = ${blogger_id}
              GROUP BY posts.id
-             ORDER BY posts.created_at DESC`,
-            [blogger_id]
-        );
-        const likedPosts = await db.query(
-          "SELECT post_id FROM likes WHERE user_id = $1",
-          [req.user.id]
-        );
-        const likedPostIds = likedPosts.rows.map((row) => row.post_id);
+             ORDER BY posts.created_at DESC;`;
+
+        const likedPosts = await sql`
+          SELECT post_id FROM likes WHERE user_id = ${req.user.id}
+        `;
+        const likedPostIds = likedPosts.map((row) => row.post_id);
 
         res.render("blogger.ejs", {
             blogger,
-            posts: posts.rows,
+            posts,
             likedPostIds,
             user: req.user //current user
         });
@@ -445,5 +421,5 @@ passport.deserializeUser((user, cb) => {
 
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
