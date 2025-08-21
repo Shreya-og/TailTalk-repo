@@ -242,7 +242,7 @@
                                             <%= post.title %>
                                         </h5>
                                         <p class="text-muted mb-2" style="font-size: 0.8rem;">
-                                            <%= new Date(post.created_at).toLocaleString("en-US", { year: "numeric" , month: "short" ,
+                                            <%= new Date(post.created_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", year: "numeric" , month: "short" ,
                                                 day: "numeric" , hour: "numeric" , minute: "2-digit" , hour12: true }) %>
                                         </p>
                                         <p>
