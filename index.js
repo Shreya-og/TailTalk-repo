@@ -152,7 +152,7 @@ app.get("/main", async (req, res) => {
   ORDER BY posts.created_at DESC;`;
 
     const likedPosts = await sql`
-      SELECT post_id FROM likes WHERE user_id = ${req,user,id};`;
+      SELECT post_id FROM likes WHERE user_id = ${req.user.id};`;
     const likedPostIds = likedPosts.map(row => row.post_id);
     res.render("main.ejs", {
       posts: posts,

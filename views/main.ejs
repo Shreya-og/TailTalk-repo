@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TailTalk - Share Your Animal Stories</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" />
+    <link rel="manifest" href="/assets/images/site.webmanifest" />
+
+    <title>TailTalk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         html {
@@ -135,14 +140,14 @@
             margin-bottom: 20px;
         }
 
-        .sample-post {
+        .post {
             background-color: #fdfd96;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
         }
 
-        .sample-image {
+        .image {
             width: 100%;
             max-height: 550px;
             object-fit: cover;
@@ -220,7 +225,7 @@
                     <p>No posts available yet. Be the first to share your story!</p>
                     <% } else { %>
                         <% posts.forEach(post=> { %>
-                            <div class="sample-post mb-4">
+                            <div class="post mb-4">
                                 <small class="text-muted mb-2 d-block">
                                     <% if (post.blogger_id===user_id) { %>
                                         <a href="/user" class="text-decoration-none text-muted">@<%= post.blogger_name %></a>
@@ -231,12 +236,12 @@
                                 </small>
                             
                                 <% if (post.image) { %>
-                                    <img src="<%= post.image %>" class="sample-image mb-2" alt="Post Image">
+                                    <img src="<%= post.image %>" class="image mb-2" alt="Post Image">
                                     <% } %>
                                         <h5>
                                             <%= post.title %>
                                         </h5>
-                                        <p class="text-muted mb-2">
+                                        <p class="text-muted mb-2" style="font-size: 0.8rem;">
                                             <%= new Date(post.created_at).toLocaleString("en-US", { year: "numeric" , month: "short" ,
                                                 day: "numeric" , hour: "numeric" , minute: "2-digit" , hour12: true }) %>
                                         </p>
